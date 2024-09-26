@@ -2,7 +2,9 @@ package listeners
 
 import (
 	"fmt"
+	"sync"
 
+	"github.com/zeiss/pkg/conv"
 	v8 "github.com/zeiss/v8go"
 )
 
@@ -11,15 +13,20 @@ type Opt func(*Listener)
 
 // Listener ...
 type Listener struct {
-	in  map[string]chan *v8.Object
-	out map[string]chan *v8.Value
+	in  sync.Map
+	out sync.Map
+}
+
+// GetMethodName ...
+func (l *Listener) GetMethodName() string {
+	return "addEventListener"
 }
 
 // New ...
 func New(opt ...Opt) *Listener {
 	c := new(Listener)
-	c.in = make(map[string]chan *v8.Object)
-	c.out = make(map[string]chan *v8.Value)
+	c.in = sync.Map{}
+	c.out = sync.Map{}
 
 	for _, o := range opt {
 		o(c)
@@ -31,16 +38,22 @@ func New(opt ...Opt) *Listener {
 // WithEvents ...
 func WithEvents(name string, in chan *v8.Object, out chan *v8.Value) Opt {
 	return func(l *Listener) {
-		l.in[name] = in
-		l.out[name] = out
+		l.in.Store(name, in)
+		l.out.Store(name, out)
 	}
 }
 
-// Inject ...
-func (l *Listener) Inject(iso *v8.Isolate, global *v8.ObjectTemplate) error {
+// Add ...
+func Add(iso *v8.Isolate, global *v8.ObjectTemplate, opts ...Opt) error {
+	if iso == nil {
+		return fmt.Errorf("v8-polyfills/listeners: isolate is required")
+	}
+
+	l := New(opts...)
+
 	ctxFn := v8.NewFunctionTemplate(iso, l.GetFunctionCallback())
 
-	if err := global.Set("addListener", ctxFn, v8.ReadOnly); err != nil {
+	if err := global.Set(l.GetMethodName(), ctxFn, v8.ReadOnly); err != nil {
 		return fmt.Errorf("v8-polyfills/listener: %w", err)
 	}
 
@@ -54,7 +67,7 @@ func (l *Listener) GetFunctionCallback() v8.FunctionCallback {
 		args := info.Args()
 
 		if len(args) <= 1 {
-			err := fmt.Errorf("addListener: expected 2 arguments, got %d", len(args))
+			err := fmt.Errorf("listeners: expected 2 arguments, got %d", len(args))
 
 			return newErrorValue(ctx, err)
 		}
@@ -66,9 +79,9 @@ func (l *Listener) GetFunctionCallback() v8.FunctionCallback {
 			return newErrorValue(ctx, err)
 		}
 
-		chn, ok := l.in[args[0].String()]
+		chn, ok := l.in.Load(conv.String(args[0]))
 		if !ok {
-			err := fmt.Errorf("addListener: event %s not found", args[0].String())
+			err := fmt.Errorf("listeners: event %s not found", args[0].String())
 
 			return newErrorValue(ctx, err)
 		}
@@ -77,12 +90,17 @@ func (l *Listener) GetFunctionCallback() v8.FunctionCallback {
 			for e := range chn {
 				v, err := fn.Call(ctx.Global(), e)
 				if err != nil {
-					fmt.Printf("addListener: %v", err)
+					fmt.Printf("listeners: %v", err)
 				}
 
-				l.out[args[0].String()] <- v
+				out, ok := l.out.Load(conv.String(args[0]))
+				if !ok {
+					fmt.Println("listeners: out channel not found")
+				}
+
+				out.(chan *v8.Value) <- v
 			}
-		}(chn, fn)
+		}(chn.(chan *v8.Object), fn)
 
 		return v8.Undefined(ctx.Isolate())
 	}

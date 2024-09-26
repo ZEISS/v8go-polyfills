@@ -25,13 +25,13 @@ type Console struct {
 	methodName string
 }
 
-// AddTo ...
-func AddTo(ctx *v8.Context, opt ...Opt) error {
+// Add ...
+func Add(ctx *v8.Context, opts ...Opt) error {
 	if ctx == nil {
 		return errors.New("v8-polyfills/console: ctx is required")
 	}
 
-	c := New(opt...)
+	c := New(opts...)
 
 	iso := ctx.Isolate()
 	con := v8.NewObjectTemplate(iso)

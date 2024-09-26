@@ -9,6 +9,11 @@
 
 You can find the documentation hosted on [godoc.org](https://godoc.org/github.com/zeiss/v8go-polyfills).
 
+## Service Worker
+
+* `console`
+* `addEventListener`
+
 ## License
 
 [Apache 2.0](/LICENSE)
