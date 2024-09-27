@@ -6,12 +6,15 @@ import (
 
 	"github.com/zeiss/pkg/conv"
 	v8 "github.com/zeiss/v8go"
+	"github.com/zeiss/v8go-polyfills/runtime"
 )
 
-// Opt ...
+var _ runtime.Polyfill = (*Listener)(nil)
+
+// Opt is a functional option for configuring the listener.
 type Opt func(*Listener)
 
-// Listener ...
+// Listener is a polyfill for the addEventListener method.
 type Listener struct {
 	in  sync.Map
 	out sync.Map

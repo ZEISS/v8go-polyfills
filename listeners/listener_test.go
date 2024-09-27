@@ -1,6 +1,7 @@
 package listeners_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,62 @@ import (
 	v8 "github.com/zeiss/v8go"
 	"github.com/zeiss/v8go-polyfills/listeners"
 )
+
+func ExampleAdd() {
+	iso := v8.NewIsolate()
+	global := v8.NewObjectTemplate(iso)
+
+	in := make(chan *v8.Object)
+	out := make(chan *v8.Value)
+
+	err := listeners.Add(iso, global, listeners.WithEvents("auth", in, out))
+	if err != nil {
+		panic(err)
+	}
+
+	ctx := v8.NewContext(iso, global)
+
+	_, err = ctx.RunScript("addEventListener('auth', event => { return event.sourceIP === '127.0.0.1' })", "listener.js")
+	if err != nil {
+		panic(err)
+	}
+
+	obj, err := newContextObject(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	in <- obj
+	v := <-out
+
+	fmt.Println(v)
+	// Output: true
+}
+
+func TestAdd(t *testing.T) {
+	iso := v8.NewIsolate()
+	global := v8.NewObjectTemplate(iso)
+
+	in := make(chan *v8.Object)
+	out := make(chan *v8.Value)
+
+	err := listeners.Add(iso, global, listeners.WithEvents("auth", in, out))
+	require.NoError(t, err)
+
+	ctx := v8.NewContext(iso, global)
+
+	_, err = ctx.RunScript("addEventListener('auth', event => { return event.sourceIP === '127.0.0.1' })", "listener.js")
+	require.NoError(t, err)
+
+	obj, err := newContextObject(ctx)
+	require.NoError(t, err)
+
+	in <- obj
+	v := <-out
+
+	assert.NotNil(t, v)
+	assert.True(t, v.IsBoolean())
+}
 
 func BenchmarkEventListenerCall(b *testing.B) {
 	iso := v8.NewIsolate()

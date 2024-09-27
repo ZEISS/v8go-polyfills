@@ -11,6 +11,7 @@ import (
 func main() {
 	iso := v8.NewIsolate()
 	global := v8.NewObjectTemplate(iso)
+	defer iso.Dispose()
 
 	in := make(chan *v8.Object, 1)
 	out := make(chan *v8.Value, 1)
@@ -18,6 +19,8 @@ func main() {
 	errorx.Panic(listeners.Add(iso, global, listeners.WithEvents("auth", in, out)))
 
 	ctx := v8.NewContext(iso, global)
+	defer ctx.Close()
+
 	errorx.Must(ctx.RunScript("addEventListener('auth', event => { return event.sourceIP === '127.0.0.1' })", "listener.js"))
 
 	obj := errorx.Must(newContextObject(ctx))
