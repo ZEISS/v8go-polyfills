@@ -10,8 +10,8 @@ github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0t
 github.com/rogpeppe/go-internal v1.14.1/go.mod h1:MaRKkUm5W0goXpeCfT7UZI6fk/L7L7so1lCWt35ZSgc=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
-github.com/zeiss/pkg v0.2.0 h1:7AejcJjQWqbd0MVrnPFUg6XLh2EStlaWR+Z5nPKCECE=
-github.com/zeiss/pkg v0.2.0/go.mod h1:lQBmtY5JhMvHs/bZxWnvy3G54/vOZerfUMPH+se1YjY=
+github.com/zeiss/pkg v0.2.1 h1:hLcQcUQG4LBbaBLQd9TpqY1xCuUqEqfehRzCi94sxv8=
+github.com/zeiss/pkg v0.2.1/go.mod h1:VkqYcxdLO+jJWyE+0FiDvMe/aZzI4UXR8POabG9Nmuc=
 github.com/zeiss/v8go v1.0.0 h1:KMcjwcpjjKVZBCDz7jjFVhaQpl3OExUTWxeGTpbJDr0=
 github.com/zeiss/v8go v1.0.0/go.mod h1:hziXidwNCEGtRIS23dCf1/bFJnZAMkGdexowwnspgYU=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
