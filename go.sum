@@ -1,7 +1,7 @@
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
-github.com/zeiss/pkg v0.2.1 h1:hLcQcUQG4LBbaBLQd9TpqY1xCuUqEqfehRzCi94sxv8=
-github.com/zeiss/pkg v0.2.1/go.mod h1:VkqYcxdLO+jJWyE+0FiDvMe/aZzI4UXR8POabG9Nmuc=
+github.com/zeiss/pkg v0.2.4 h1:tXg9WFj+YajXHsck2CCVH6+Gjct8DyVIYXeh6akdEaM=
+github.com/zeiss/pkg v0.2.4/go.mod h1:XLGpvkYhJ74f/ZPgHsu1ZoK5bCBZ/o48pteDM2lkLiA=
 github.com/zeiss/v8go v1.0.0 h1:KMcjwcpjjKVZBCDz7jjFVhaQpl3OExUTWxeGTpbJDr0=
 github.com/zeiss/v8go v1.0.0/go.mod h1:hziXidwNCEGtRIS23dCf1/bFJnZAMkGdexowwnspgYU=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
